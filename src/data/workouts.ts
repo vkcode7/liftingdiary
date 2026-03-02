@@ -86,13 +86,62 @@ export async function getWorkoutsByDate(date: Date) {
 
 export type WorkoutByDate = Awaited<ReturnType<typeof getWorkoutsByDate>>[number];
 
+export async function getWorkoutById(id: number) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const rows = await db
+    .select({
+      workoutId: workouts.id,
+      workoutName: workouts.name,
+      startedAt: workouts.startedAt,
+    })
+    .from(workouts)
+    .where(and(eq(workouts.id, id), eq(workouts.userId, userId)));
+
+  if (rows.length === 0) return null;
+
+  return {
+    id: rows[0].workoutId,
+    name: rows[0].workoutName,
+    startedAt: rows[0].startedAt,
+  };
+}
+
+export async function updateWorkout(
+  id: number,
+  data: { name: string; startedAt: Date }
+) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  await db
+    .update(workouts)
+    .set({ name: data.name, startedAt: data.startedAt })
+    .where(and(eq(workouts.id, id), eq(workouts.userId, userId)));
+}
+
+export async function deleteWorkout(id: number) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  await db
+    .delete(workouts)
+    .where(and(eq(workouts.id, id), eq(workouts.userId, userId)));
+}
+
 export async function createWorkout(data: { name: string; startedAt: Date }) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 
-  return db.insert(workouts).values({
-    name: data.name,
-    startedAt: data.startedAt,
-    userId,
-  });
+  const [row] = await db
+    .insert(workouts)
+    .values({
+      name: data.name,
+      startedAt: data.startedAt,
+      userId,
+    })
+    .returning({ id: workouts.id });
+
+  return row;
 }
