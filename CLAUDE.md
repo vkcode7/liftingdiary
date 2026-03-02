@@ -4,9 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## IMPORTANT: Docs-First Requirement
 
-**Before generating any code, Claude Code MUST first read and reference the relevant documentation files in the `/docs` directory.** Always check `/docs` for existing specs, designs, or guidelines that apply to the task at hand, and ensure all generated code aligns with those documents.
+**Before generating any code, Claude Code MUST first read and reference the relevant documentation files in the `/docs` directory.** Always check `/docs` for existing specs, designs, or guidelines that apply to the task at hand, and ensure all generated code aligns with those documents:
 
 - /docs/ui.md
+- /docs/data-fetching.md
 
 ## Commands
 
