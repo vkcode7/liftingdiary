@@ -1,4 +1,7 @@
+import Link from "next/link";
 import { format } from "date-fns";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWorkoutsByDate } from "@/data/workouts";
 import { DatePicker } from "./date-picker";
@@ -23,7 +26,15 @@ export default async function DashboardPage({
         </p>
       </div>
 
-      <DatePicker value={date} />
+      <div className="flex items-center gap-3">
+        <DatePicker value={date} />
+        <Button asChild>
+          <Link href="/dashboard/workout/new">
+            <Plus className="size-4" />
+            New Workout
+          </Link>
+        </Button>
+      </div>
 
       <section className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">

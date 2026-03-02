@@ -85,3 +85,14 @@ export async function getWorkoutsByDate(date: Date) {
 }
 
 export type WorkoutByDate = Awaited<ReturnType<typeof getWorkoutsByDate>>[number];
+
+export async function createWorkout(data: { name: string; startedAt: Date }) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  return db.insert(workouts).values({
+    name: data.name,
+    startedAt: data.startedAt,
+    userId,
+  });
+}
